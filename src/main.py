@@ -28,12 +28,12 @@ async def lifespan(_: FastAPI):
 app = FastAPI(lifespan=lifespan)
 
 
-@app.get("/health")
+@app.get("/health", summary="Health check")
 def health_check():
     return SuccessResponse()
 
 
-@app.get("/font/{font_file}/char/{unicode}.svg")
+@app.get("/font/{font_file}/char/{unicode}.svg", summary="Get character svg")
 def get_character(font_file: str, unicode: str):
     if not os.path.exists(f"data/fonts/{font_file}"):
         raise HTTPException(status_code=404, detail="Font not found")
@@ -49,7 +49,7 @@ def get_character(font_file: str, unicode: str):
         return Response(content=f.read(), media_type="image/svg+xml")
 
 
-@app.post("/font/upload")
+@app.post("/font", summary="Upload font file")
 def upload(file: UploadFile):
     if file.content_type not in ["font/ttf", "font/otf"]:
         return ErrorResponse(message="Only support ttf or otf fonts")
