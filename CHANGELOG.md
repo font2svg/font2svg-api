@@ -2,6 +2,13 @@
 
 
 
+## v0.1.1 (2024-03-14)
+
+### Fix
+
+* fix: fix ImportError in container ([`73f8dd7`](https://github.com/font2svg/font2svg-api/commit/73f8dd72cefba65c4a93904a69a2dce32d4c1bf4))
+
+
 ## v0.1.0 (2024-03-13)
 
 ### Feature
