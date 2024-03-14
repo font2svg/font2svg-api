@@ -2,7 +2,10 @@
   <img width="180px" src="https://github.com/font2svg/font2svg/assets/1836701/bf958bc8-e375-4c09-9cb9-d7462d217dbc" />
 </p>
 
-[![Release](https://github.com/font2svg/font2svg-api/actions/workflows/release.yml/badge.svg?branch=main)](https://github.com/font2svg/font2svg-api/actions/workflows/release.yml)
+[![Release](https://img.shields.io/github/actions/workflow/status/font2svg/font2svg-api/release.yml)](https://github.com/font2svg/font2svg-api/actions/workflows/release.yml)
+[![GitHub Release](https://img.shields.io/github/v/release/font2svg/font2svg-api)](https://github.com/font2svg/font2svg-api/releases/latest)
+[![Docker Image Size](https://img.shields.io/docker/image-size/font2svg/font2svg-api)](https://hub.docker.com/r/font2svg/font2svg-api)
+[![License](https://img.shields.io/github/license/font2svg/font2svg-api)](https://github.com/font2svg/font2svg-api/blob/main/LICENSE)
 
 # Font2svg Api
 
