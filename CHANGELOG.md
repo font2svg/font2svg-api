@@ -2,6 +2,13 @@
 
 
 
+## v0.2.1 (2024-03-14)
+
+### Fix
+
+* fix: fix runtime version error inside docker image (#2) ([`f43bebc`](https://github.com/font2svg/font2svg-api/commit/f43bebcf783be63a9c8419337b1f5ed8b8959a65))
+
+
 ## v0.2.0 (2024-03-14)
 
 ### Feature
