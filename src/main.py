@@ -1,11 +1,12 @@
 import io
 import os
+import secrets
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI, HTTPException, Response, UploadFile
+from fastapi import Depends, FastAPI, Header, HTTPException, Response, UploadFile
 from fontTools.ttLib import TTFont
 from freetype import Face
-from yuanfen import ErrorResponse, Logger, SuccessResponse
+from yuanfen import Config, ErrorResponse, Logger, SuccessResponse
 
 from . import __version__
 from .converter import Converter
@@ -13,19 +14,40 @@ from .utils import generate_font_info_cache, get_font_id, remove_font_svg_cache
 
 logger = Logger()
 
+# Create necessary directories and config file if not exists
+if not os.path.exists("data/fonts"):
+    os.makedirs("data/fonts")
+if not os.path.exists("data/cache"):
+    os.makedirs("data/cache")
+if not os.path.exists("data/config.yaml"):
+    admin_token = secrets.token_urlsafe(16)
+    logger.info("config.yaml not found")
+    with open("data/config.yaml", "w") as f:
+        f.write(f"admin_token: {admin_token}\n")
+    logger.info(f"created config.yaml with random admin_token: {admin_token}")
+
+config = Config("data/config.yaml")
+
 
 @asynccontextmanager
 async def lifespan(_: FastAPI):
     logger.info(f"api service started, version: {__version__}")
-    if not os.path.exists("data/fonts"):
-        os.makedirs("data/fonts")
-    if not os.path.exists("data/cache"):
-        os.makedirs("data/cache")
     yield
     logger.info("api service stopped")
 
 
-app = FastAPI(lifespan=lifespan)
+app = FastAPI(
+    title="Font2svg Api",
+    summary="Font2svg server-side project, written in Python.",
+    version=__version__,
+    lifespan=lifespan,
+)
+
+
+def admin_auth(admin_token: str = Header(None)):
+    if admin_token != config["admin_token"]:
+        raise HTTPException(status_code=401, detail="Unauthorized")
+    return True
 
 
 @app.get("/health", summary="Health check")
@@ -49,7 +71,7 @@ def get_character(font_file: str, unicode: str):
         return Response(content=f.read(), media_type="image/svg+xml")
 
 
-@app.post("/font", summary="Upload font file")
+@app.post("/font", summary="Upload font file (admin_token needed)", dependencies=[Depends(admin_auth)])
 def upload(file: UploadFile):
     if file.content_type not in ["font/ttf", "font/otf"]:
         return ErrorResponse(message="Only support ttf or otf fonts")
