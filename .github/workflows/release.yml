@@ -57,8 +57,9 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: |
-            font2svg/font2svg-api
-            ghcr.io/font2svg/font2svg-api
+            ${{ github.repository }}
+            ghcr.io/${{ github.repository }}
+
           tags: |
             ${{ steps.parse-semver.outputs.FULL_VERSION }}
             ${{ steps.parse-semver.outputs.MAJOR_VERSION }}
@@ -92,3 +93,10 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+
+      - name: Update repo description
+        uses: peter-evans/dockerhub-description@v4
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          short-description: ${{ github.event.repository.description }}
