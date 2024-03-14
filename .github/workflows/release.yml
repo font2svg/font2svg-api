@@ -16,6 +16,7 @@ jobs:
     outputs:
       released: ${{ steps.python-semantic-release.outputs.released }}
       version: ${{ steps.python-semantic-release.outputs.version }}
+      commit_sha: ${{ steps.sha.outputs.new_sha }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -27,7 +28,12 @@ jobs:
         uses: python-semantic-release/python-semantic-release@master
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-
+      - name: Get Commit SHA
+        id: sha
+        run: |
+          new_sha=$(git rev-parse HEAD)
+          echo $new_sha
+          echo "new_sha=$new_sha" >> $GITHUB_OUTPUT
   docker:
     name: Docker Image
     runs-on: ubuntu-latest
@@ -40,6 +46,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.bump-version.outputs.commit_sha }}
 
       - name: Parse semantic version
         id: parse-semver
