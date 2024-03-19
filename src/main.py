@@ -1,36 +1,47 @@
 import io
 import os
-import secrets
+import threading
 from contextlib import asynccontextmanager
 
 from fastapi import Depends, FastAPI, Header, HTTPException, Response, UploadFile
 from fontTools.ttLib import TTFont
-from freetype import Face
-from yuanfen import Config, ErrorResponse, Logger, SuccessResponse
+from yuanfen import ErrorResponse, Logger, SuccessResponse
 
 from . import __version__
 from .converter import Converter
-from .utils import generate_font_info_cache, get_font_id, remove_font_svg_cache
+from .utils import generate_font_meta_cache, get_font_id, remove_font_svg_cache
 
 logger = Logger()
 
-# Create necessary directories and config file if not exists
-if not os.path.exists("data/fonts"):
-    os.makedirs("data/fonts")
-if not os.path.exists("data/cache"):
-    os.makedirs("data/cache")
-if not os.path.exists("data/config.yaml"):
-    admin_token = secrets.token_urlsafe(16)
-    logger.info("config.yaml not found")
-    with open("data/config.yaml", "w") as f:
-        f.write(f"admin_token: {admin_token}\n")
-    logger.info(f"created config.yaml with random admin_token: {admin_token}")
+# Constants
+FONTS_DIR = "data/fonts"
+CACHE_DIR = "data/cache"
 
-config = Config("data/config.yaml")
+# Environment variables
+ADMIN_TOKEN = os.getenv("ADMIN_TOKEN")
+CACHE__ENABLED = os.getenv("CACHE__ENABLED", "true").lower() == "true"
+CACHE__PERSISTENT = os.getenv("CACHE__PERSISTENT", "true").lower() == "true"
+CACHE__MEM_CHARS_LIMIT = int(os.getenv("CACHE__MEM_CHARS_LIMIT", "10000"))
+
+# Create necessary directories if not exists
+os.makedirs(FONTS_DIR, exist_ok=True)
+os.makedirs(CACHE_DIR, exist_ok=True)
+
+# Display warning if ADMIN_TOKEN not set
+if not ADMIN_TOKEN:
+    logger.warning("ADMIN_TOKEN not set, everyone can access admin APIs")
+
+
+mem_cache = {}
 
 
 @asynccontextmanager
 async def lifespan(_: FastAPI):
+    for font_file in os.listdir(FONTS_DIR):
+        if font_file.endswith(".ttf") or font_file.endswith(".otf"):
+            font_path = f"{FONTS_DIR}/{font_file}"
+            generate_font_meta_cache(TTFont(font_path), CACHE_DIR, font_file)
+            logger.info(f"font meta cache generated: {font_file}")
     logger.info(f"api service started, version: {__version__}")
     yield
     logger.info("api service stopped")
@@ -45,7 +56,7 @@ app = FastAPI(
 
 
 def admin_auth(admin_token: str = Header(None)):
-    if admin_token != config["admin_token"]:
+    if admin_token != ADMIN_TOKEN:
         raise HTTPException(status_code=401, detail="Unauthorized")
     return True
 
@@ -55,20 +66,37 @@ def health_check():
     return SuccessResponse()
 
 
+@app.get("/benchmark_base", summary="Benchmark baseline api")
+def benchmark_base():
+    return "Hello, World!"
+
+
 @app.get("/font/{font_file}/char/{unicode}.svg", summary="Get character svg")
 def get_character(font_file: str, unicode: str):
-    if not os.path.exists(f"data/fonts/{font_file}"):
+    if not os.path.exists(f"{FONTS_DIR}/{font_file}"):
         raise HTTPException(status_code=404, detail="Font not found")
 
-    svg_cache_file_path = f"data/cache/{font_file}/svg/{unicode}.svg"
+    if CACHE__ENABLED:
+        cache = get_cache(font_file, unicode)
+        if cache["svg_content"]:
+            return Response(content=cache["svg_content"], media_type="image/svg+xml")
 
-    if not os.path.exists(svg_cache_file_path):
-        face = Face(f"data/fonts/{font_file}")
-        converter = Converter(face, font_file)
-        converter.generate_svg(unicode)
+        if os.path.exists(cache["svg_file_path"]):
+            with open(cache["svg_file_path"], "r") as f:
+                svg_content = f.read()
+                save_cache_mem(font_file, unicode, svg_content)
+                return Response(content=svg_content, media_type="image/svg+xml")
 
-    with open(svg_cache_file_path, "r") as f:
-        return Response(content=f.read(), media_type="image/svg+xml")
+        converter = Converter(FONTS_DIR, font_file)
+        svg_content = converter.convert(unicode)
+        save_cache_mem(font_file, unicode, svg_content)
+        save_cache_file(font_file, unicode, svg_content)
+        return Response(content=svg_content, media_type="image/svg+xml")
+
+    else:
+        converter = Converter(FONTS_DIR, font_file)
+        svg_content = converter.convert(unicode)
+        return Response(content=svg_content, media_type="image/svg+xml")
 
 
 @app.post("/font", summary="Upload font file (admin_token needed)", dependencies=[Depends(admin_auth)])
@@ -81,11 +109,39 @@ def upload(file: UploadFile):
     extension = os.path.splitext(file.filename)[1].lower()
     font_file = f"{font_id}{extension}"
 
-    with open(f"data/fonts/{font_file}", "wb") as f:
+    with open(f"{FONTS_DIR}/{font_file}", "wb") as f:
         f.write(fileBytes)
 
-    generate_font_info_cache(font, font_file)
-    remove_font_svg_cache(font_file)
+    generate_font_meta_cache(font, CACHE_DIR, font_file)
+    remove_font_svg_cache(CACHE_DIR, font_file)
 
     logger.info(f"{font_file} uploaded success")
     return SuccessResponse()
+
+
+def get_cache(font_file: str, unicode: str):
+    global mem_cache
+    cache_key = f"{font_file}/{unicode}"
+    if cache_key not in mem_cache:
+        mem_cache[cache_key] = {
+            "lock": threading.Lock(),
+            "svg_content": None,
+            "svg_file_path": f"{CACHE_DIR}/{font_file}/svg/{unicode}.svg",
+        }
+    return mem_cache[cache_key]
+
+
+def save_cache_file(font_file: str, unicode: str, svg_content: str):
+    cache = get_cache(font_file, unicode)
+    if cache["lock"].acquire():
+        try:
+            os.makedirs(f"{CACHE_DIR}/{font_file}/svg", exist_ok=True)
+            with open(cache["svg_file_path"], "w") as f:
+                f.write(svg_content)
+        finally:
+            cache["lock"].release()
+
+
+def save_cache_mem(font_file: str, unicode: str, svg_content: str):
+    cache = get_cache(font_file, unicode)
+    cache["svg_content"] = svg_content

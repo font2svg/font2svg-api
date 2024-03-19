@@ -40,15 +40,15 @@ def get_font_id(font: TTFont):
     return font["name"].getDebugName(name_id_dict["POST_SCRIPT_NAME"]).replace(" ", "-")
 
 
-def get_font_info(font: TTFont):
-    font_info = {}
+def get_font_meta(font: TTFont):
+    font_meta = {}
     for name_record in font["name"].names:
         for name_id_key in name_id_dict.keys():
             if name_record.nameID == name_id_dict[name_id_key]:
-                if font_info.get(name_id_key.lower()) is None:
-                    font_info[name_id_key.lower()] = []
+                if font_meta.get(name_id_key.lower()) is None:
+                    font_meta[name_id_key.lower()] = []
 
-                font_info[name_id_key.lower()].append(
+                font_meta[name_id_key.lower()].append(
                     {
                         "platformId": name_record.platformID,
                         "encodingId": name_record.platEncID,
@@ -56,30 +56,29 @@ def get_font_info(font: TTFont):
                         "value": name_record.toStr(),
                     }
                 )
-    return font_info
+    return font_meta
 
 
-def get_font_info_from_cache(font_file: str):
-    cache_folder = f"data/cache/{font_file}"
-    with open(f"{cache_folder}/font_info.json", "r") as f:
+def get_font_meta_from_cache(cache_dir: str, font_file: str):
+    font_cache_dir = f"{cache_dir}/{font_file}"
+    with open(f"{font_cache_dir}/font_meta.json", "r") as f:
         return json.load(f)
 
 
-def generate_font_info_cache(font: TTFont, font_file: str):
-    font_info = get_font_info(font)
+def generate_font_meta_cache(font: TTFont, cache_dir: str, font_file: str):
+    font_meta = get_font_meta(font)
 
-    cache_folder = f"data/cache/{font_file}"
-    if not os.path.exists(cache_folder):
-        os.makedirs(cache_folder)
-    with open(f"{cache_folder}/font_info.json", "w") as f:
-        json.dump(font_info, f, indent=4, ensure_ascii=False)
+    font_cache_dir = f"{cache_dir}/{font_file}"
+    os.makedirs(font_cache_dir, exist_ok=True)
+    with open(f"{font_cache_dir}/font_meta.json", "w") as f:
+        json.dump(font_meta, f, indent=4, ensure_ascii=False)
 
 
-def remove_font_svg_cache(font_file: str):
-    svg_cache_folder = f"data/cache/{font_file}/svg"
-    if os.path.exists(svg_cache_folder):
-        for file in os.listdir(svg_cache_folder):
-            os.remove(f"{svg_cache_folder}/{file}")
+def remove_font_svg_cache(cache_dir: str, font_file: str):
+    svg_cache_dir = f"{cache_dir}/{font_file}/svg"
+    if os.path.exists(svg_cache_dir):
+        for file in os.listdir(svg_cache_dir):
+            os.remove(f"{svg_cache_dir}/{file}")
 
 
 def get_charcode_from_unicode_str(unicode_str: str):

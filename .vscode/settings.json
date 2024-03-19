@@ -5,8 +5,10 @@
   },
   "black-formatter.args": ["--line-length", "180"],
   "cSpell.words": [
+    "disvg",
     "hori",
     "instancer",
+    "Sonoma",
     "svgpathtools",
     "svgs",
     "wsvg"
