@@ -2,6 +2,13 @@
 
 
 
+## v0.3.0 (2024-03-19)
+
+### Feature
+
+* feat: support cache, add benchmarks ([`41c9c2c`](https://github.com/font2svg/font2svg-api/commit/41c9c2cf1d9b565120517850cf5fe37f3e7e1fdf))
+
+
 ## v0.2.1 (2024-03-14)
 
 ### Fix
