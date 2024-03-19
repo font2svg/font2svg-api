@@ -3,10 +3,13 @@
 # - https://gist.github.com/GaryLee/04dd0537fc501724b0f3af329864bcf1
 
 import json
+import os
+from tempfile import gettempdir
+from xml.dom import minidom
 
 from freetype import Face
-from svgpathtools import CubicBezier, Line, Path, QuadraticBezier, parse_path, wsvg
-from yuanfen import Version
+from svgpathtools import CubicBezier, Line, Path, QuadraticBezier, disvg, parse_path
+from yuanfen import Version, time
 
 from . import __version__
 from .utils import get_charcode_from_unicode_str
@@ -15,8 +18,8 @@ from .utils import get_charcode_from_unicode_str
 class Converter:
     version = Version.parse(__version__)
 
-    def __init__(self, face: Face, font_file: str, color: str = "#000000"):
-        self.face = face
+    def __init__(self, fonts_dir: str, font_file: str, color: str = "#000000"):
+        self.face = Face(f"{fonts_dir}/{font_file}")
         self.font_file = font_file
         self.color = color
         self._reset()
@@ -75,7 +78,7 @@ class Converter:
         view_box_height = self.face.ascender - self.face.descender
         return f"{view_box_min_x} {view_box_min_y} {view_box_width} {view_box_height}"
 
-    def generate_svg(self, unicode: str):
+    def convert(self, unicode: str):
         self._reset()
         self.face.load_char(get_charcode_from_unicode_str(unicode))
         outline = self.face.glyph.outline
@@ -111,12 +114,13 @@ class Converter:
             "viewBox": self._calc_view_box(metrics),
             "preserveAspectRatio": "xMidYMid meet",
         }
-        svg_cache_folder = f"data/cache/{self.font_file}/svg"
-        svg_path = f"{svg_cache_folder}/{unicode}.svg"
-        wsvg(
+        temp_filename = os.path.join(gettempdir(), f"font2svg_temp_{time.current_timestamp()}.svg")
+        drawing = disvg(
             paths=path,
             attributes=[{"fill": self.color, "fill-opacity": None if len(self._svg_paths) > 0 else 0}],
             svg_attributes=attr,
-            filename=svg_path,
+            paths2Drawing=True,
+            filename=temp_filename,
         )
-        return svg_path
+        drawing.save()
+        return minidom.parse(temp_filename).toprettyxml()

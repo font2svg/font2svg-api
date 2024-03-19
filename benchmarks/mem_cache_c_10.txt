@@ -1,0 +1,54 @@
+ab -n 5000 -c 10 http://localhost:8000/font/LXGWWenKai-Regular.ttf/char/9F99.svg
+This is ApacheBench, Version 2.3 <$Revision: 1903618 $>
+Copyright 1996 Adam Twiss, Zeus Technology Ltd, http://www.zeustech.net/
+Licensed to The Apache Software Foundation, http://www.apache.org/
+
+Benchmarking localhost (be patient)
+Completed 500 requests
+Completed 1000 requests
+Completed 1500 requests
+Completed 2000 requests
+Completed 2500 requests
+Completed 3000 requests
+Completed 3500 requests
+Completed 4000 requests
+Completed 4500 requests
+Completed 5000 requests
+Finished 5000 requests
+
+
+Server Software:        uvicorn
+Server Hostname:        localhost
+Server Port:            8000
+
+Document Path:          /font/LXGWWenKai-Regular.ttf/char/9F99.svg
+Document Length:        2710 bytes
+
+Concurrency Level:      10
+Time taken for tests:   1.086 seconds
+Complete requests:      5000
+Failed requests:        0
+Total transferred:      14265000 bytes
+HTML transferred:       13550000 bytes
+Requests per second:    4605.30 [#/sec] (mean)
+Time per request:       2.171 [ms] (mean)
+Time per request:       0.217 [ms] (mean, across all concurrent requests)
+Transfer rate:          12830.97 [Kbytes/sec] received
+
+Connection Times (ms)
+              min  mean[+/-sd] median   max
+Connect:        0    0   0.1      0       1
+Processing:     1    2   1.0      2      20
+Waiting:        1    2   1.0      2      20
+Total:          1    2   1.0      2      20
+
+Percentage of the requests served within a certain time (ms)
+  50%      2
+  66%      2
+  75%      2
+  80%      2
+  90%      2
+  95%      3
+  98%      4
+  99%      5
+ 100%     20 (longest request)
