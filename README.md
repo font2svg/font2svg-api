@@ -69,6 +69,12 @@ services:
 
 ## Benchmark
 
+Using `uvicorn[standard]` for better performance. See: [Run a Server Manually - Uvicorn](https://fastapi.tiangolo.com/deployment/manually/#install-the-server-program)
+
+> By adding the `standard`, Uvicorn will install and use some recommended extra dependencies.
+>
+> That including `uvloop`, the high-performance drop-in replacement for `asyncio`, that provides the big concurrency performance boost.
+
 ### Running command:
 
 ```bash
@@ -77,22 +83,22 @@ $ uvicorn src.main:app --log-level critical
 
 ### Platform Info:
 
-> **Device**: Apple MacBook Pro(13-inch, M1, 2020)
->
-> **Chip**: Apple M1
->
-> **Memory**: 16GB
->
-> **System**: macOS Sonoma 14.3.1 (23D60)
+**Device**: Apple MacBook Pro(13-inch, M1, 2020)
+
+**Chip**: Apple M1
+
+**Memory**: 16GB
+
+**System**: macOS Sonoma 14.3.1 (23D60)
 
 ### Results:
 
 | RPS(QPS)         | concurrency=1 | concurrency=10 | concurrency=100 |
 | ---------------- | ------------- | -------------- | --------------- |
-| Baseline         | 1959.15       | 4824.70        | 5417.28         |
-| Cache off        | 193.01        | 143.30         | 140.51          |
-| File cache hit   | 1869.71       | 3905.64        | 4106.74         |
-| Memory cache hit | 1942.15       | 4605.30        | 5132.85         |
+| Cache off        | 198.95        | 145.44         | 139.51          |
+| File cache hit   | 4043.38       | 5477.92        | 5555.66         |
+| Memory cache hit | 4425.27       | 7573.39        | 7892.01         |
+| Baseline         | 4646.00       | 8177.52        | 8528.67         |
 
 ### Details:
 

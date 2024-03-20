@@ -1,9 +1,9 @@
-ab -n 5000 -c 1 http://localhost:8000/benchmark_base
+ab -n 5000 -c 1 http://127.0.0.1:8000/benchmark_base
 This is ApacheBench, Version 2.3 <$Revision: 1903618 $>
 Copyright 1996 Adam Twiss, Zeus Technology Ltd, http://www.zeustech.net/
 Licensed to The Apache Software Foundation, http://www.apache.org/
 
-Benchmarking localhost (be patient)
+Benchmarking 127.0.0.1 (be patient)
 Completed 500 requests
 Completed 1000 requests
 Completed 1500 requests
@@ -18,37 +18,37 @@ Finished 5000 requests
 
 
 Server Software:        uvicorn
-Server Hostname:        localhost
+Server Hostname:        127.0.0.1
 Server Port:            8000
 
 Document Path:          /benchmark_base
 Document Length:        15 bytes
 
 Concurrency Level:      1
-Time taken for tests:   2.552 seconds
+Time taken for tests:   1.076 seconds
 Complete requests:      5000
 Failed requests:        0
-Total transferred:      795000 bytes
+Total transferred:      700000 bytes
 HTML transferred:       75000 bytes
-Requests per second:    1959.15 [#/sec] (mean)
-Time per request:       0.510 [ms] (mean)
-Time per request:       0.510 [ms] (mean, across all concurrent requests)
-Transfer rate:          304.20 [Kbytes/sec] received
+Requests per second:    4646.00 [#/sec] (mean)
+Time per request:       0.215 [ms] (mean)
+Time per request:       0.215 [ms] (mean, across all concurrent requests)
+Transfer rate:          635.20 [Kbytes/sec] received
 
 Connection Times (ms)
               min  mean[+/-sd] median   max
-Connect:        0    0   0.4      0      27
-Processing:     0    0   0.4      0      27
-Waiting:        0    0   0.2      0       6
-Total:          0    0   0.6      0      27
+Connect:        0    0   0.0      0       0
+Processing:     0    0   0.2      0       9
+Waiting:        0    0   0.1      0       5
+Total:          0    0   0.2      0       9
 
 Percentage of the requests served within a certain time (ms)
   50%      0
   66%      0
   75%      0
   80%      0
-  90%      1
-  95%      1
-  98%      1
+  90%      0
+  95%      0
+  98%      0
   99%      1
- 100%     27 (longest request)
+ 100%      9 (longest request)
