@@ -2,6 +2,13 @@
 
 
 
+## v0.4.0 (2024-03-20)
+
+### Feature
+
+* feat: support lru cache ([`bf9ad94`](https://github.com/font2svg/font2svg-api/commit/bf9ad941a7513290cfba711148e33a12a0581b0f))
+
+
 ## v0.3.0 (2024-03-19)
 
 ### Feature
