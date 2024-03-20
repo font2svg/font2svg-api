@@ -67,11 +67,6 @@ def health_check():
     return SuccessResponse()
 
 
-@app.get("/benchmark_base", summary="Benchmark baseline api")
-def benchmark_base():
-    return "Hello, World!"
-
-
 @app.get("/font/{font_file}/char/{unicode}.svg", summary="Get character svg")
 def get_character(font_file: str, unicode: str):
     if not os.path.exists(f"{FONTS_DIR}/{font_file}"):

@@ -1,4 +1,4 @@
-ab -n 5000 -c 100 http://127.0.0.1:8000/font/LXGWWenKai-Regular.ttf/char/9F99.svg
+ab -n 5000 -c 100 -l http://127.0.0.1:8000/benchmark/cache_mem
 This is ApacheBench, Version 2.3 <$Revision: 1903618 $>
 Copyright 1996 Adam Twiss, Zeus Technology Ltd, http://www.zeustech.net/
 Licensed to The Apache Software Foundation, http://www.apache.org/
@@ -21,34 +21,34 @@ Server Software:        uvicorn
 Server Hostname:        127.0.0.1
 Server Port:            8000
 
-Document Path:          /font/LXGWWenKai-Regular.ttf/char/9F99.svg
-Document Length:        2710 bytes
+Document Path:          /benchmark/cache_mem
+Document Length:        Variable
 
 Concurrency Level:      100
-Time taken for tests:   0.634 seconds
+Time taken for tests:   0.609 seconds
 Complete requests:      5000
 Failed requests:        0
-Total transferred:      14170000 bytes
-HTML transferred:       13550000 bytes
-Requests per second:    7892.01 [#/sec] (mean)
-Time per request:       12.671 [ms] (mean)
-Time per request:       0.127 [ms] (mean, across all concurrent requests)
-Transfer rate:          21841.76 [Kbytes/sec] received
+Total transferred:      21098882 bytes
+HTML transferred:       20478872 bytes
+Requests per second:    8209.68 [#/sec] (mean)
+Time per request:       12.181 [ms] (mean)
+Time per request:       0.122 [ms] (mean, across all concurrent requests)
+Transfer rate:          33831.08 [Kbytes/sec] received
 
 Connection Times (ms)
               min  mean[+/-sd] median   max
-Connect:        0    0   0.4      0       4
-Processing:     8   12   3.2     12      44
-Waiting:        4   12   3.1     11      44
-Total:          8   12   3.5     12      46
+Connect:        0    0   0.6      0      12
+Processing:     1   12   3.1     11      35
+Waiting:        1   12   3.1     11      35
+Total:          3   12   3.3     11      37
 
 Percentage of the requests served within a certain time (ms)
-  50%     12
-  66%     12
+  50%     11
+  66%     11
   75%     12
   80%     12
-  90%     13
-  95%     17
-  98%     29
-  99%     32
- 100%     46 (longest request)
+  90%     14
+  95%     19
+  98%     24
+  99%     27
+ 100%     37 (longest request)

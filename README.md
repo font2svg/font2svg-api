@@ -75,13 +75,28 @@ Using `uvicorn[standard]` for better performance. See: [Run a Server Manually - 
 >
 > That including `uvloop`, the high-performance drop-in replacement for `asyncio`, that provides the big concurrency performance boost.
 
-### Running command:
+Using [ApacheBench](https://httpd.apache.org/docs/2.4/programs/ab.html) for running benchmark.
+
+### Commands:
 
 ```bash
-$ uvicorn src.main:app --log-level critical
+# Run benchmark app
+$ uvicorn src.benchmark:app --log-level critical
+
+# Cache off
+ab -n 5000 -c 100 -l http://127.0.0.1:8000/benchmark/cache_off
+
+# File cache hit
+ab -n 5000 -c 100 -l http://127.0.0.1:8000/benchmark/cache_file
+
+# Memory cache hit
+ab -n 5000 -c 100 -l http://127.0.0.1:8000/benchmark/cache_mem
+
+# Baseline
+ab -n 5000 -c 100 -l http://127.0.0.1:8000/benchmark/baseline
 ```
 
-### Platform Info:
+### Platform info:
 
 **Device**: Apple MacBook Pro(13-inch, M1, 2020)
 
@@ -91,7 +106,7 @@ $ uvicorn src.main:app --log-level critical
 
 **System**: macOS Sonoma 14.3.1 (23D60)
 
-### Results:
+### Results (single worker process):
 
 | RPS(QPS)         | concurrency=1 | concurrency=10 | concurrency=100 |
 | ---------------- | ------------- | -------------- | --------------- |
