@@ -9,6 +9,7 @@ from yuanfen import ErrorResponse, Logger, SuccessResponse
 
 from . import __version__
 from .converter import Converter
+from .svg_cache import SvgCache
 from .utils import generate_font_meta_cache, get_font_id, remove_font_svg_cache
 
 logger = Logger()
@@ -32,7 +33,7 @@ if not ADMIN_TOKEN:
     logger.warning("ADMIN_TOKEN not set, everyone can access admin APIs")
 
 
-mem_cache = {}
+svg_cache = SvgCache(CACHE__MEM_CHARS_LIMIT)
 
 
 @asynccontextmanager
@@ -120,15 +121,15 @@ def upload(file: UploadFile):
 
 
 def get_cache(font_file: str, unicode: str):
-    global mem_cache
+    global svg_cache
     cache_key = f"{font_file}/{unicode}"
-    if cache_key not in mem_cache:
-        mem_cache[cache_key] = {
+    if cache_key not in svg_cache:
+        svg_cache[cache_key] = {
             "lock": threading.Lock(),
             "svg_content": None,
             "svg_file_path": f"{CACHE_DIR}/{font_file}/svg/{unicode}.svg",
         }
-    return mem_cache[cache_key]
+    return svg_cache[cache_key]
 
 
 def save_cache_file(font_file: str, unicode: str, svg_content: str):
