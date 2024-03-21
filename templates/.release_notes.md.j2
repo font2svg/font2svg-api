@@ -1,3 +1,8 @@
+{#
+    This is a Jinja template for generating release notes with Python Semantic Release.
+    Ref: https://python-semantic-release.readthedocs.io/en/latest/changelog_templates.html
+#}
+
 ## What's Changed
 {% for type_, commits in release["elements"] | dictsort %}
 ### {{ type_ | capitalize }}
@@ -5,3 +10,10 @@
 {% for commit in commits %}
 * {{ commit.descriptions[0] }} by {{commit.commit.author.name}} in [`{{ commit.short_hash }}`]({{ commit.hexsha | commit_hash_url }})
 {%- endfor %}{% endif %}{% endfor %}
+
+{% from ".macros.j2" import version_compare_url %}
+{% set releases = context.history.released.items() | list %}
+{% set prev_version = releases[1][0] %}
+{% set full_changelog_url = version_compare_url(prev_version,  version) %}
+
+**Full Changelog**: {{ full_changelog_url }}
