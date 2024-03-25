@@ -6,6 +6,8 @@
 
 ### Fix
 
+* fix: fix for semantic_release ([`15dfb03`](https://github.com/font2svg/font2svg-api/commit/15dfb03c0c52816de4bad67a5d66d384c81aa4cc))
+
 * fix: fix CHANGELOG.md ([`2db95b7`](https://github.com/font2svg/font2svg-api/commit/2db95b73f63f2b957329b27e7a16a21c419947c2))
 
 
@@ -14,6 +16,10 @@
 ### Feature
 
 * feat: add font get and delete apis ([`69b23d6`](https://github.com/font2svg/font2svg-api/commit/69b23d6e2b995aa87ef324f7d35afd9185b426e5))
+
+### Refactor
+
+* refactor: code refactor ([`6d3fe04`](https://github.com/font2svg/font2svg-api/commit/6d3fe0473c320c55198f981e1ff04c6fe8b1b65d))
 
 
 ## v0.4.0 (2024-03-20)
@@ -24,6 +30,12 @@
 
 
 ## v0.3.0 (2024-03-19)
+
+### Documentation
+
+* docs: update README.md ([`390718c`](https://github.com/font2svg/font2svg-api/commit/390718cf7048b9fc3e188cc0ce7582f6fe344846))
+
+* docs: add badges to README.md ([`715ba76`](https://github.com/font2svg/font2svg-api/commit/715ba762f53698b5f8abc95ba069a9fefa988620))
 
 ### Feature
 
@@ -49,6 +61,10 @@
 
 
 ## v0.1.1 (2024-03-14)
+
+### Documentation
+
+* docs: update README.md ([`1c7e44a`](https://github.com/font2svg/font2svg-api/commit/1c7e44a8d4b3357e0335b99560bb7b2708d3029f))
 
 ### Fix
 
