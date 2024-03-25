@@ -11,8 +11,8 @@ from freetype import Face
 from svgpathtools import CubicBezier, Line, Path, QuadraticBezier, disvg, parse_path
 from yuanfen import Version, time
 
-from . import __version__
-from .utils import get_charcode_from_unicode_str
+from .. import __version__
+from ..utils import get_charcode_from_unicode_str
 
 
 class Converter:
