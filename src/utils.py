@@ -1,21 +1,38 @@
+import io
 import json
 import os
+import shutil
 import threading
 
 from fontTools.ttLib import TTFont
 
-from .constants import CACHE__MEM_CHARS_LIMIT, CACHE_DIR, FONT_NAME_IDS
+from .constants import (
+    CACHE__ENABLED,
+    CACHE__MEM_CHARS_LIMIT,
+    CACHE_DIR,
+    FONT_NAME_IDS,
+    FONTS_DIR,
+)
 from .models.cache import Cache
 
 cache = Cache(CACHE__MEM_CHARS_LIMIT)
 
 
-def get_font_id(font: TTFont):
+def get_font_id(font_file: str | bytes):
+    font = TTFont(io.BytesIO(font_file)) if isinstance(font_file, bytes) else TTFont(f"{FONTS_DIR}/{font_file}")
     return font["name"].getDebugName(FONT_NAME_IDS["POST_SCRIPT_NAME"]).replace(" ", "-")
 
 
-def get_font_meta(font: TTFont):
-    font_meta = {}
+def get_font_meta_from_file(font_file: str):
+    font_path = f"{FONTS_DIR}/{font_file}"
+    if not os.path.exists(font_path):
+        return None
+
+    font_meta = {
+        "font_file": font_file,
+    }
+    font = TTFont(font_path)
+
     for name_record in font["name"].names:
         for name_id_key in FONT_NAME_IDS.keys():
             if name_record.nameID == FONT_NAME_IDS[name_id_key]:
@@ -33,25 +50,38 @@ def get_font_meta(font: TTFont):
     return font_meta
 
 
-def get_font_meta_from_cache_file(cache_dir: str, font_file: str):
-    font_cache_dir = f"{cache_dir}/{font_file}"
-    with open(f"{font_cache_dir}/font_meta.json", "r") as f:
+def get_font_meta_from_cache(font_file: str):
+    meta_cache_file_path = f"{CACHE_DIR}/{font_file}/font_meta.json"
+    if not os.path.exists(meta_cache_file_path):
+        return None
+    with open(meta_cache_file_path, "r") as f:
         return json.load(f)
 
 
-def generate_font_meta_cache_file(font: TTFont, cache_dir: str, font_file: str):
-    font_meta = get_font_meta(font)
-    font_cache_dir = f"{cache_dir}/{font_file}"
+def get_font_meta(font_file: str):
+    if CACHE__ENABLED:
+        font_meta_cache = get_font_meta_from_cache(font_file)
+        if font_meta_cache:
+            return font_meta_cache
+        else:
+            font_meta = get_font_meta_from_file(font_file)
+            save_font_meta_cache(font_file, font_meta)
+            return font_meta
+    else:
+        return get_font_meta_from_file(font_file)
+
+
+def save_font_meta_cache(font_file: str, font_meta: any):
+    font_cache_dir = f"{CACHE_DIR}/{font_file}"
     os.makedirs(font_cache_dir, exist_ok=True)
     with open(f"{font_cache_dir}/font_meta.json", "w") as f:
         json.dump(font_meta, f, indent=4, ensure_ascii=False)
 
 
-def remove_svg_cache_files(cache_dir: str, font_file: str):
-    svg_cache_dir = f"{cache_dir}/{font_file}/svg"
-    if os.path.exists(svg_cache_dir):
-        for file in os.listdir(svg_cache_dir):
-            os.remove(f"{svg_cache_dir}/{file}")
+def remove_font_cache_files(font_file: str):
+    font_cache_dir = f"{CACHE_DIR}/{font_file}"
+    if os.path.exists(font_cache_dir):
+        shutil.rmtree(font_cache_dir)
 
 
 def get_charcode_from_unicode_str(unicode_str: str):
