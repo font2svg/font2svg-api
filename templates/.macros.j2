@@ -11,3 +11,7 @@
 {% macro version_compare_url(prev_version, version) -%}
 https://github.com/{{ context.repo_owner }}/{{ context.repo_name }}/compare/v{{ prev_version }}...v{{ version }}
 {%- endmacro %}
+
+{% macro changelog_file_url -%}
+https://github.com/{{ context.repo_owner }}/{{ context.repo_name }}/blob/{{ context.branch_name }}/CHANGELOG.md
+{%- endmacro %}
