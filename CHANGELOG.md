@@ -2,6 +2,20 @@
 
 
 
+## v0.5.1 (2024-03-25)
+
+### Fix
+
+* fix: fix CHANGELOG.md ([`2db95b7`](https://github.com/font2svg/font2svg-api/commit/2db95b73f63f2b957329b27e7a16a21c419947c2))
+
+
+## v0.5.0 (2024-03-25)
+
+### Feature
+
+* feat: add font get and delete apis ([`69b23d6`](https://github.com/font2svg/font2svg-api/commit/69b23d6e2b995aa87ef324f7d35afd9185b426e5))
+
+
 ## v0.4.0 (2024-03-20)
 
 ### Feature
