@@ -15,9 +15,7 @@ Font2svg server-side project, written in Python. (ETA: 2024Q2)
 
 ### Docker run
 
-#### The simplest stateless instance for demo or testing
-
-This will start a stateless instance of Font2svg api listening on the default port of 8000.
+The following command will start a simplest stateless instance of Font2svg api listening on the default port of 8000.
 
 ```bash
 $ docker run -d --name font2svg-api font2svg/font2svg-api:latest
@@ -25,7 +23,7 @@ $ docker run -d --name font2svg-api font2svg/font2svg-api:latest
 
 If all goes well, you'll be able to access your font2svg api on `http://localhost:8000` and `http://localhost:8000/docs` to access api docs.
 
-Notice that any fonts uploaded will be lost once the container stops running. If you want to persist your data, you should add a volume as shown below.
+Notice that this is only for demo or testing because any fonts uploaded will be lost once the container stops running. If you want to persist your data, you should add a volume as shown below.
 
 #### Full configuration
 
@@ -41,7 +39,7 @@ $ docker run -d --name font2svg-api \
         -e CACHE__MEM_CHARS_LIMIT=10000 \
         -v /path/to/font2svg:/var/lib/font2svg/data \
         -v /path/to/font2svg/logs:/var/lib/font2svg/logs \
-        -p 3001:8000 \
+        -p 8000:8000 \
         font2svg/font2svg-api:latest
 ```
 
@@ -54,7 +52,7 @@ services:
     image: font2svg/font2svg-api:latest
     restart: always
     ports:
-      - 3001:8000
+      - 8000:8000
     environment:
       # Secret token for admin operations
       ADMIN_TOKEN: your_admin_token
