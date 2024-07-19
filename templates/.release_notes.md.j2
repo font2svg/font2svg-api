@@ -8,7 +8,7 @@
 ### {{ type_ | capitalize }}
 {%- if type_ != "unknown" %}
 {% for commit in commits %}
-* {{ commit.descriptions[0] }} by {{commit.commit.author.name}} in [`{{ commit.short_hash }}`]({{ commit.hexsha | commit_hash_url }})
+* {{ commit.descriptions[0] }} ([`{{ commit.short_hash }}`]({{ commit.hexsha | commit_hash_url }}))
 {%- endfor %}{% endif %}{% endfor %}
 
 {% from ".macros.j2" import version_compare_url %}
