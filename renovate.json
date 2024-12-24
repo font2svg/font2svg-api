@@ -1,0 +1,13 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended", "group:allNonMajor", ":semanticCommitTypeAll(chore)"],
+  "packageRules": [
+    {
+      "matchUpdateTypes": ["minor", "patch"],
+      "automerge": true,
+      "schedule": ["before 11am on Monday"]
+    }
+  ],
+  "rangeStrategy": "bump",
+  "timezone": "Asia/Shanghai"
+}
