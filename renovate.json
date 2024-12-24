@@ -4,8 +4,7 @@
   "packageRules": [
     {
       "matchUpdateTypes": ["minor", "patch"],
-      "automerge": true,
-      "schedule": ["before 11am on Monday"]
+      "automerge": true
     }
   ],
   "rangeStrategy": "bump",
