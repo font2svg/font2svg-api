@@ -1,9 +1,0 @@
-black
-fastapi
-fonttools
-freetype-py
-python-multipart
-requests
-svgpathtools
-uvicorn
-yuanfen
