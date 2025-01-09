@@ -46,7 +46,7 @@
 
 [tool.semantic_release.changelog]
     changelog_file = "CHANGELOG.md"
-    exclude_commit_patterns = ["^build: .*", "^chore: release v.*", "^test: .*"]
+    exclude_commit_patterns = ["^build:", "^chore: release v", "^test:"]
     template_dir = "templates"
 
 [tool.semantic_release.changelog.environment]
