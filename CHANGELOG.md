@@ -1,12 +1,23 @@
 # CHANGELOG
 
 
+## v0.6.10 (2025-01-10)
+
+### Chores
+
+- Update project.toml
+  ([`8660f6a`](https://github.com/font2svg/font2svg-api/commit/8660f6aa2d8417427e170619a72d6a34baa0a46b))
+
+
 ## v0.6.9 (2025-01-10)
 
 ### Chores
 
 - Update pyproject.toml
   ([`5dacf17`](https://github.com/font2svg/font2svg-api/commit/5dacf17a3e2a5eb227161f51cc8d3e086cdcc08f))
+
+- **release**: V0.6.9
+  ([`a968289`](https://github.com/font2svg/font2svg-api/commit/a9682898f032eb81c999d31d61b20504279be013))
 
 
 ## v0.6.8 (2025-01-10)
