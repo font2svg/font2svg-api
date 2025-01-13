@@ -38,9 +38,6 @@
     tag_format = "v{version}"
     version_variables = ["src/__init__.py:__version__"]
 
-[tool.semantic_release.changelog]
-    exclude_commit_patterns = ['''chore: release|chore\(release\): .+''']
-
 [tool.semantic_release.commit_parser_options]
     allowed_tags = [
         "build",
@@ -55,4 +52,4 @@
         "test",
     ]
     minor_tags = ["feat"]
-    patch_tags = ["chore", "ci", "docs", "fix", "perf", "refactor"]
+    patch_tags = ["build", "fix", "perf", "refactor"]
