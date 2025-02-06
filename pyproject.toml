@@ -2,14 +2,14 @@
     authors = [{ name = "Bean", email = "dengbin@bilibili.com" }]
     dependencies = [
         "black (>=25.1.0,<25.1.1)",
-        "fastapi (>=0.115.6,<0.116.0)",
-        "fonttools (>=4.55.3,<5.0.0)",
+        "fastapi (>=0.115.8,<0.116.0)",
+        "fonttools (>=4.55.8,<5.0.0)",
         "freetype-py (>=2.5.1,<3.0.0)",
         "python-multipart (>=0.0.20,<0.0.21)",
         "requests (>=2.32.3,<3.0.0)",
         "svgpathtools (>=1.6.1,<2.0.0)",
         "uvicorn (>=0.34.0,<0.35.0)",
-        "yuanfen (>=2025.1.9.2,<2026.0.0.0)",
+        "yuanfen (>=2025.1.13.1,<2026.0.0.0)",
     ]
     description = "Font2svg server-side project, written in Python."
     license = { text = "MIT" }
