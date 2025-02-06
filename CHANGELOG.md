@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## v0.6.12 (2025-02-06)
+
+### Build System
+
+- **deps**: Update poetry.lock
+  ([`2b6b983`](https://github.com/font2svg/font2svg-api/commit/2b6b983fb97c8020af09890f1a81a52335b2eeb7))
+
+
 ## v0.6.11 (2025-02-06)
 
 ### Build System
