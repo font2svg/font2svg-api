@@ -5,7 +5,7 @@
     {
       "matchUpdateTypes": ["minor", "patch"],
       "automerge": true,
-      "schedule": ["before 4am on Monday"]
+      "extends": ["schedule:monthly"]
     }
   ],
   "rangeStrategy": "bump",
